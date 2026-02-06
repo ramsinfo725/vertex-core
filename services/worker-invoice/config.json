@@ -1,0 +1,12 @@
+{
+  "fields": [
+    "Invoice Number",
+    "Invoice Date",
+    "Vendor Name",
+    "Customer Name",
+    "Total Amount",
+    "Tax Amount",
+    "Bank Account Number",
+    "Currency"
+  ]
+}

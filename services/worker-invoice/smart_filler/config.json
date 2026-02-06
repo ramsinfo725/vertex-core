@@ -1,0 +1,12 @@
+{
+  "mapping": {
+    "Customer Name": "cust_name",
+    "Invoice Date": "inv_dt",
+    "Total Amount": "amt",
+    "Status": "status"
+  },
+  "mandatory": [
+    "Customer Name",
+    "Total Amount"
+  ]
+}
