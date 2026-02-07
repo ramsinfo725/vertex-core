@@ -7,11 +7,10 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('sfa_token'));
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [view, setView] = useState('dashboard'); // dashboard, users, tenants
+  const [view, setView] = useState('dashboard'); // dashboard, users, tenants, masters, reports
 
   const login = async (e) => {
     e.preventDefault();
-    // Mock Login for MVP Visualization (Backend auth logic is WIP)
     if(email === 'ram@sfa.net' && password === 'admin') {
         const fakeToken = "abc-123";
         setToken(fakeToken);
@@ -50,6 +49,8 @@ function App() {
           <li onClick={()=>setView('dashboard')} className={view==='dashboard'?'active':''}>Dashboard</li>
           <li onClick={()=>setView('tenants')} className={view==='tenants'?'active':''}>Tenants (Companies)</li>
           <li onClick={()=>setView('users')} className={view==='users'?'active':''}>Users</li>
+          <li onClick={()=>setView('masters')} className={view==='masters'?'active':''}>Masters</li>
+          <li onClick={()=>setView('reports')} className={view==='reports'?'active':''}>Reports</li>
           <li onClick={()=>setView('settings')} className={view==='settings'?'active':''}>Global Settings</li>
           <li onClick={logout} style={{color:'red', marginTop:'auto'}}>Logout</li>
         </ul>
@@ -62,6 +63,8 @@ function App() {
         
         {view === 'dashboard' && <DashboardHome />}
         {view === 'tenants' && <TenantManager />}
+        {view === 'masters' && <MasterManager />}
+        {view === 'reports' && <ReportsView />}
       </main>
     </div>
   );
@@ -93,6 +96,55 @@ function TenantManager() {
             </table>
         </div>
     )
+}
+
+function MasterManager() {
+    return (
+        <div>
+            <div className="toolbar">
+                <h2>Master Data</h2>
+            </div>
+            <div className="stats-grid">
+                <div className="card">
+                    <h3>Products</h3>
+                    <p className="stat">0</p>
+                    <button className="btn-primary" style={{marginTop:'10px', width:'100%'}}>Import Products (CSV)</button>
+                </div>
+                <div className="card">
+                    <h3>Customers</h3>
+                    <p className="stat">0</p>
+                    <button className="btn-primary" style={{marginTop:'10px', width:'100%'}}>Import Customers (CSV)</button>
+                </div>
+                <div className="card">
+                    <h3>Price Lists</h3>
+                    <p className="stat">0</p>
+                    <button className="btn-primary" style={{marginTop:'10px', width:'100%'}}>Import Prices (CSV)</button>
+                </div>
+            </div>
+            <div className="card" style={{marginTop:'20px'}}>
+                <h3>Upload Templates</h3>
+                <p style={{color:'#888'}}>Download these to prepare your data correctly.</p>
+                <div style={{marginTop:'10px'}}>
+                    <button style={{marginRight:'10px', color:'#2563eb'}}>📄 Products Template</button>
+                    <button style={{marginRight:'10px', color:'#2563eb'}}>📄 Customers Template</button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function ReportsView() {
+    return (
+        <div>
+            <div className="toolbar">
+                <h2>Reports</h2>
+                <button className="btn-primary">Download All (CSV)</button>
+            </div>
+            <div className="card">
+                <p style={{color:'#888', textAlign:'center', padding:'40px'}}>Sales graph and analytics will appear here once orders are synced.</p>
+            </div>
+        </div>
+    );
 }
 
 export default App;
