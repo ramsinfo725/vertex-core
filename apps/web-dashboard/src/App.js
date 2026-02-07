@@ -54,6 +54,7 @@ function App() {
           <li onClick={()=>setView('settings')} className={view==='settings'?'active':''}>Global Settings</li>
           <li onClick={logout} style={{color:'red', marginTop:'auto'}}>Logout</li>
         </ul>
+        <div style={{fontSize:'10px', color:'#444', marginTop:'20px'}}>v1.0.2-masters-fix</div>
       </nav>
       <main className="content">
         <header>
