@@ -1,21 +1,46 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { TextInput, Button, Text, Title, Surface } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setLoading(true);
-    // Simulate API call or processing
-    console.log('Login Credentials:', { email, password });
-    
-    // Reset loading state after a short delay (or when actual logic completes)
-    setTimeout(() => {
+    try {
+      const response = await fetch('https://sfa-platform-fresh.onrender.com/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Assuming the token is in data.token based on standard JWT practices
+        // If the API returns it differently, this might need adjustment
+        const token = data.token || data.accessToken;
+        
+        if (token) {
+          await AsyncStorage.setItem('token', token);
+          navigation.navigate('Beat');
+        } else {
+          Alert.alert('Login Failed', 'No token received from server');
+        }
+      } else {
+        Alert.alert('Login Failed', data.message || 'Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert('Error', 'Something went wrong. Please check your connection.');
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   return (
