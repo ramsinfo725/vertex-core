@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const API_URL = process.env.REACT_APP_API_URL || "https://sfa-platform-fresh.onrender.com";
+const API_URL = process.env.REACT_APP_API_URL || "https://vertex-os-engine.onrender.com";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('sfa_token'));
@@ -54,7 +54,7 @@ function App() {
           <li onClick={()=>setView('settings')} className={view==='settings'?'active':''}>Global Settings</li>
           <li onClick={logout} style={{color:'red', marginTop:'auto'}}>Logout</li>
         </ul>
-        <div style={{fontSize:'10px', color:'#444', marginTop:'20px'}}>v1.0.2-masters-fix</div>
+        <div style={{fontSize:'10px', color:'#444', marginTop:'20px'}}>v1.0.3-engine-brain</div>
       </nav>
       <main className="content">
         <header>
@@ -100,6 +100,35 @@ function TenantManager() {
 }
 
 function MasterManager() {
+    const [counts, setCounts] = useState({ products: 0, customers: 0, prices: 0 });
+
+    const triggerUpload = (type) => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.csv';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const res = await fetch(`${API_URL}/upload/${type}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                if(res.ok) {
+                    alert(`${type} imported successfully!`);
+                } else {
+                    alert('Upload failed. Check console.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Network Error');
+            }
+        };
+        input.click();
+    }
+
     return (
         <div>
             <div className="toolbar">
@@ -108,18 +137,18 @@ function MasterManager() {
             <div className="stats-grid">
                 <div className="card">
                     <h3>Products</h3>
-                    <p className="stat">0</p>
-                    <button className="btn-primary" style={{marginTop:'10px', width:'100%'}}>Import Products (CSV)</button>
+                    <p className="stat">{counts.products}</p>
+                    <button className="btn-primary" style={{marginTop:'10px', width:'100%'}} onClick={() => triggerUpload('products')}>Import Products (CSV)</button>
                 </div>
                 <div className="card">
                     <h3>Customers</h3>
-                    <p className="stat">0</p>
-                    <button className="btn-primary" style={{marginTop:'10px', width:'100%'}}>Import Customers (CSV)</button>
+                    <p className="stat">{counts.customers}</p>
+                    <button className="btn-primary" style={{marginTop:'10px', width:'100%'}} onClick={() => triggerUpload('customers')}>Import Customers (CSV)</button>
                 </div>
                 <div className="card">
                     <h3>Price Lists</h3>
-                    <p className="stat">0</p>
-                    <button className="btn-primary" style={{marginTop:'10px', width:'100%'}}>Import Prices (CSV)</button>
+                    <p className="stat">{counts.prices}</p>
+                    <button className="btn-primary" style={{marginTop:'10px', width:'100%'}} onClick={() => triggerUpload('prices')}>Import Prices (CSV)</button>
                 </div>
             </div>
             <div className="card" style={{marginTop:'20px'}}>
