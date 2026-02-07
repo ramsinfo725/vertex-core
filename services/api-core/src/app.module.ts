@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-// Modules (Placeholders for now)
-// import { UsersModule } from './users/users.module';
+import { TenantsModule } from './tenants/tenants.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -18,6 +18,8 @@ import { AppService } from './app.service';
         rejectUnauthorized: false
       }
     }),
+    TenantsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
